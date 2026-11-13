@@ -16,7 +16,7 @@ if not image_paths:
     raise ValueError("no supported file found")
 
 model, _, preprocess = open_clip.create_model_and_transforms(
-    "ViT-B-32",
+    "ViT-B-32-quickgelu",
     pretrained = "openai"
 )
 

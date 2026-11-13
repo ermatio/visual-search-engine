@@ -3,7 +3,7 @@ import open_clip
 import torch
 from PIL import Image
 
-model_name = "ViT-B-32"
+model_name = "ViT-B-32-quickgelu"
 image_directory = Path("data/images")
 supported_extensions = {".jpg", ".jpeg", ".png"}
 
