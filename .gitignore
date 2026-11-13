@@ -13,3 +13,8 @@ __pycache__/
 
 # Local image datasets
 data/
+
+# Python packaging
+*.egg-info/
+build/
+dist/
