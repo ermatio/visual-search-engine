@@ -1,10 +1,9 @@
-from pathlib import Path
-import open_clip
+from pathlib import Path 
 import torch
-from PIL import Image
+from visual_search import ClipEmbedder
 
-model_name = "ViT-B-32-quickgelu"
-dataset_directory = Path("data/images")
+project_root = Path(__file__).resolve().parents[1]
+dataset_directory = project_root/"data"/"images"
 supported_extensions = {".jpg", ".jpeg", ".png"}
 
 image_paths = sorted(
@@ -14,49 +13,32 @@ image_paths = sorted(
 )
 
 if not image_paths:
-    raise ValueError("dataset not found")
+    raise ValueError("No supported dataset images found")
 
-query_path = Path(
+query_input = Path(
     input("Enter the query image path: ").strip().strip('"')
 )
+
+if query_input.is_absolute():
+    query_path = query_input
+else:
+    query_path = project_root/query_input
 
 if not query_path.exists():
     raise FileNotFoundError(f"Query image not found: {query_path}")
 
-model, _, preprocess = open_clip.create_model_and_transforms(
-    model_name,
-    pretrained= "openai"
-)
 
-model.eval()
+embedder = ClipEmbedder()
 
-processed_images = []
+image_embeddings = embedder.encode_images(image_paths)
+query_embedding = embedder.encode_images([query_path])
 
-for path in image_paths:
-    with Image.open(path) as image:
-        processed_images.append(preprocess(image.convert("RGB")))
+similarity_scores = image_embeddings @ query_embedding.T
+similarity_scores = similarity_scores.squeeze(dim=1)
 
-image_batch = torch.stack(processed_images)
+scores, indexes = torch.sort(similarity_scores, descending=True)
 
-with Image.open(query_path) as image:
-    query_tensor = preprocess(image.convert("RGB")).unsqueeze(0)
+print(f"\nImages similar to: {query_path.name}\n")
 
-with torch.inference_mode():
-    image_embeddings = model.encode_image(image_batch)
-    query_embedding = model.encode_image(query_tensor)
-    image_embeddings = image_embeddings / image_embeddings.norm(
-        dim = -1,
-        keepdim = True
-    )
-    query_embedding = query_embedding / query_embedding.norm(
-        dim = -1,
-        keepdim = True
-    )
-
-similarity_score = image_embeddings @ query_embedding.T
-similarity_score = similarity_score.squeeze(1)
-
-scores, indexes = torch.sort(similarity_score, descending = True)
-
-for score, index in zip(scores, indexes):
-    print(f"{image_paths[index].name} : {score.item():.3f}")
+for similarity_score, index in zip(scores, indexes):
+    print(f"{image_paths[index].name} : {similarity_score.item():.3f}")    

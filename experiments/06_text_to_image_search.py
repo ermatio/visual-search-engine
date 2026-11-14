@@ -1,56 +1,32 @@
 from pathlib import Path
-import open_clip
 import torch
-from PIL import Image
+from visual_search import ClipEmbedder
 
-model_name = "ViT-B-32-quickgelu"
 image_directory = Path("data/images")
 supported_extensions = {".jpg", ".jpeg", ".png"}
 
-image_path = sorted(
+image_paths = sorted(
     path
     for path in image_directory.iterdir()
     if path.suffix.lower() in supported_extensions
 )
 
-if not image_path:
+if not image_paths:
     raise ValueError("image not found")
 
-model, _, preprocess = open_clip.create_model_and_transforms(
-    model_name,
-    pretrained= "openai"    
-)
+embedder = ClipEmbedder()
 
-tokenizer = open_clip.get_tokenizer(model_name)
-model.eval()
+image_embeddings = embedder.encode_images(image_paths)
 
-processed_images = []
-
-for path in image_path:
-    with Image.open(path) as image:
-        processed_images.append(preprocess(image.convert("RGB")))
-
-image_batch = torch.stack(processed_images)
-
-query = input("Describe the image you want:")
-text_tokens = tokenizer([query])
-
-with torch.inference_mode():
-    image_embeddings = model.encode_image(image_batch)
-    text_embedding = model.encode_text(text_tokens)
-    image_embeddings = image_embeddings / image_embeddings.norm(
-        dim = -1,
-        keepdim = True
-    )
-    text_embedding = text_embedding / text_embedding.norm(
-        dim = -1,
-        keepdim = True
-    )
+query = input("Describe the image you want: ")
+text_embedding = embedder.encode_text(query)
 
 similarity_scores = image_embeddings @ text_embedding.T
-similarity_scores = similarity_scores.squeeze(1)
+similarity_scores = similarity_scores.squeeze(dim=1)
 
 scores, indexes = torch.sort(similarity_scores, descending = True)
 
+print(f"\nResults for: {query}\n")
+
 for score, index in zip(scores, indexes):
-    print(f"{image_path[index].name} : {score.item():.3f}")
+    print(f"{image_paths[index].name} : {score.item():.3f}")
