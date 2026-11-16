@@ -15,6 +15,9 @@ class ClipEmbedder:
             device_type: str = "cpu"
     ) -> None:
 
+        self.model_name = model_name
+        self.pretrained = pretrained
+
         self.device = torch.device(device_type)
 
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(

@@ -1,2 +1,5 @@
 from visual_search.embedder import ClipEmbedder
-__all__ = ["ClipEmbedder"]
+from visual_search.exact_index import ExactImageIndex
+
+
+__all__ = ["ClipEmbedder", "ExactImageIndex"]
