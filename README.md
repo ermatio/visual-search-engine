@@ -6,10 +6,9 @@ using natural-language descriptions or another image.
 The project uses CLIP to place text and images in the same embedding space,
 then ranks stored image embeddings with normalized cosine similarity.
 
-> **Status:** In development. The core command-line retrieval pipeline is
-> complete; scalable vector search, an API, and a web interface are planned.
-
-## Current Features
+> **Status:** Complete learning prototype. The project implements the core
+> multimodal retrieval pipeline as a tested command-line application.
+## Features
 
 - Natural-language to image search
 - Reverse image-to-image search
@@ -182,25 +181,30 @@ real image dataset.
 - The current interface is command-line based.
 - The index must be rebuilt after the dataset changes.
 
-## Roadmap
+## Project Scope
 
-- [x] Learn and implement cosine similarity
-- [x] Generate CLIP text and image embeddings
-- [x] Support text-to-image and image-to-image search
-- [x] Persist image embeddings for repeated searches
-- [x] Add reusable embedding and exact-search components
-- [x] Add automated tests for the exact-search index
-- [ ] Add FAISS vector search and benchmark it against the exact baseline
+The project intentionally focuses on the core image-retrieval pipeline:
+embedding generation, persistent indexing, similarity search, ranking, and
+testing.
+
+## Optional Future Improvements
+
+- [ ] Add FAISS and benchmark it against exact search
 - [ ] Store image metadata with SQLite
-- [ ] Expose indexing and search through FastAPI
-- [ ] Build a simple web interface
+- [ ] Expose search through FastAPI
+- [ ] Build a web interface
 - [ ] Package the application with Docker
 - [ ] Evaluate Recall@K and search latency on a larger dataset
 
-## Learning Goals
+## What I Learned
 
-This project is being developed to build practical understanding of image and
-text embeddings, CLIP, cosine similarity, vector search, retrieval evaluation,
-API development, databases, testing, containerization, and Git-based software
-development.
+Through this project, I learned how to:
+
+- Represent images and text using normalized CLIP embeddings
+- Use cosine similarity to compare embeddings
+- Implement text-to-image and image-to-image retrieval
+- Perform vectorized ranking with PyTorch
+- Persist image embeddings and reuse them across searches
+- Structure reusable Python components
+- Write automated tests with pytest
 
