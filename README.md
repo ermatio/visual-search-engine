@@ -86,7 +86,7 @@ datasets and generated indexes can be large.
 Clone the repository and enter it:
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/visual-search-engine.git
+git clone https://github.com/ermatio/visual-search-engine.git
 cd visual-search-engine
 ```
 
