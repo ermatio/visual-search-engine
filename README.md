@@ -8,6 +8,7 @@ then ranks stored image embeddings with normalized cosine similarity.
 
 > **Status:** Complete learning prototype. The project implements the core
 > multimodal retrieval pipeline as a tested command-line application.
+
 ## Features
 
 - Natural-language to image search
@@ -18,6 +19,7 @@ then ranks stored image embeddings with normalized cosine similarity.
 - Exact top-k cosine-similarity ranking
 - Reusable embedding and search components
 - Automated tests for loading, ranking, result limits, and invalid inputs
+- Manage and publish a software project using Git and GitHub
 
 ## How It Works
 
