@@ -50,6 +50,16 @@ flowchart LR
 3. The query embedding is compared with every stored image embedding.
 4. The highest-scoring images are returned in ranked order.
 
+## Example Results
+
+### Text-to-image search
+
+![Text search results](docs/screenshots/text_search.png)
+
+### Image-to-image search
+
+![Image search results](docs/screenshots/image_search.png)
+
 ## Technology Stack
 
 - Python 3.12
